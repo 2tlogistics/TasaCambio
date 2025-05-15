@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Monedas Venezolano</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 600px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #007bff;
+        }
+
+        .fecha-hora {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .banderas {
+            margin-bottom: 1rem;
+        }
+
+        .banderas img {
+            width: 30px;
+            height: 20px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .lead {
+            color: #5a6268;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 1rem;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="number"],
+        select,
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            color: #495057;
+            box-sizing: border-box;
+        }
+
+        select {
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg fill="%23495057" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            padding-right: 2.25rem;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #resultado {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #e7f3ff;
+            color: #0056b3;
+            border-radius: 0.25rem;
+            border: 1px solid #b8daff;
+            display: none;
+            font-size: 1.1rem;
+        }
+
+        .otras-tasas {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #28a745;
+        }
+
+        .edit-rates-section {
+            margin-top: 2rem;
+            padding: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            background-color: #f8f9fa;
+        }
+
+        .edit-rates-section h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #28a745;
+        }
+
+        .rate-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .rate-input-group label {
+            width: 120px;
+            flex-shrink: 0;
+            font-size: 1rem;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .rate-input-group input[type="text"] {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            color: #495057;
+        }
+
+        #guardarTasas {
+            background-color: #28a745;
+        }
+
+        #guardarTasas:hover {
+            background-color: #1e7e34;
+        }
+
+        #verGraficoBtn {
+            margin-top: 1rem;
+            background-color: #6c757d;
+        }
+
+        #verGraficoBtn:hover {
+            background-color: #545b62;
+        }
+
+        #graficaResultados {
+            margin-top: 2rem;
+            width: 100% !important;
+            height: auto !important;
+            max-height: 300px;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body class="bg-light d-flex justify-content-center align-items-center min-vh-100 p-4">
+    <div class="container bg-white rounded shadow animate__animated animate__fadeIn">
+        <h1 class="text-primary font-weight-bold mb-2">Conversor de Monedas Venezolano</h1>
+        <p id="fechaHoraLocal" class="fecha-hora text-muted"></p>
+        <div class="banderas">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png" alt="Bandera de Estados Unidos">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Flag_of_Venezuela.svg/1200px-Flag_of_Venezuela.svg.png" alt="Bandera de Venezuela">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Flag_of_Peru_%28state%29.svg/1200px-Flag_of_Peru_%28state%29.svg.png" alt="Bandera de Perú">
+        </div>
+        <p class="lead text-secondary mb-4">Convierte entre Sol, Bolívar (BCV, Promedio, Paralelo) y Dólar.</p>
+
+        <div class="form-group">
+            <label for="cantidad" class="font-weight-bold">Cantidad:</label>
+            <input type="number" class="form-control" id="cantidad" value="1" min="0.01">
+        </div>
+
+        <div class="form-group">
+            <label for="monedaOrigen" class="font-weight-bold">Moneda de Origen:</label>
+            <select class="form-control" id="monedaOrigen">
+                <option value="SOL">Sol (PEN)</option>
+                <option value="BOL_BCV">Bolívar (BCV)</option>
+                <option value="BOL_PROMEDIO">Bolívar (Promedio)</option>
+                <option value="BOL_PARALELO">Bolívar (Paralelo)</option>
+                <option value="USD" selected>Dólar (USD)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="monedaDestino" class="font-weight-bold">Moneda de Destino:</label>
+            <select class="form-control" id="monedaDestino">
+                <option value="SOL" selected>Sol (PEN)</option>
+                <option value="BOL_BCV">Bolívar (BCV)</option>
+                <option value="BOL_PROMEDIO">Bolívar (Promedio)</option>
+                <option value="BOL_PARALELO">Bolívar (Paralelo)</option>
+                <option value="USD">Dólar (USD)</option>
+            </select>
+        </div>
+
+        <button onclick="convertirMoneda()" class="btn btn-primary btn-block font-weight-bold">Convertir</button>
+
+        <div id="resultado" class="mt-3 alert alert-info" style="display: none;"></div>
+        <div id="otrasTasasResultado" class="mt-2 text-muted small" style="display: none;"></div>
+
+        <h2 class="text-success font-weight-bold mt-4 mb-2">Tasas de Cambio Actuales</h2>
+        <p class="text-muted small mb-2">Estas tasas son referenciales y puedes editarlas.</p>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="font-weight-bold">1 USD (BCV):</span>
+                <span id="tasaBCVDisplay">93.06</span> Bs.
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="font-weight-bold">1 USD (Promedio):</span>
+                <span id="tasaPromedioDisplay">106.23</span> Bs.
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="font-weight-bold">1 USD (Paralelo):</span>
+                <span id="tasaParaleloDisplay">119.82</span> Bs.
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="font-weight-bold">1 USD:</span>
+                <span id="tasaUSDSOLDisplay">3.65</span> Soles
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="font-weight-bold">1 Sol:</span>
+                <span id="tasaSOLPromedioBOLDisplay">30.5</span> Bs. (Fijo)
+            </li>
+        </ul>
+
+        <div class="edit-rates-section">
+            <h3 class="text-success font-weight-bold mb-3">Editar Tasas de Cambio</h3>
+            <div class="form-group row">
+                <label for="editarTasaUSD_BOL_BCV" class="col-sm-4 col-form-label font-weight-bold">1 USD = Bolívar (BCV):</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="editarTasaUSD_BOL_BCV" value="93.06">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="editarTasaUSD_BOL_PROMEDIO" class="col-sm-4 col-form-label font-weight-bold">1 USD = Bolívar (Promedio):</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="editarTasaUSD_BOL_PROMEDIO" value="106.23">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="editarTasaUSD_BOL_PARALELO" class="col-sm-4 col-form-label font-weight-bold">1 USD = Bolívar (Paralelo):</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="editarTasaUSD_BOL_PARALELO" value="119.82">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="editarTasaUSD_SOL" class="col-sm-4 col-form-label font-weight-bold">1 USD = Sol (PEN):</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="editarTasaUSD_SOL" value="3.65">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="editarTasaSOL_BOL" class="col-sm-4 col-form-label font-weight-bold">1 SOL = Bolívar (Fijo):</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="editarTasaSOL_BOL" value="30.5">
+                </div>
+            </div>
+            <button id="guardarTasas" onclick="guardarTasasEditadas()" class="btn btn-success btn-block font-weight-bold">Guardar Tasas</button>
+        </div>
+
+        <button id="verGraficoBtn" onclick="mostrarGrafica()" class="btn btn-secondary btn-block font-weight-bold mt-3" style="display:none;">Ver Gráfico</button>
+
+        <p class="text-muted small mt-4">La actualización de tasas desde la API está temporalmente deshabilitada.</p>
+
+        <canvas id="graficaResultados" class="mt-4 rounded shadow" style="display: none;"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const tasasCambio = {
+            USD: { USD: 1, BOL_BCV: 93.06, BOL_PROMEDIO: 106.23, BOL_PARALELO: 119.82, SOL: 3.6},
+            BOL_BCV: { USD: 1 / 93.06, BOL_BCV: 1, BOL_PROMEDIO: 106.23 / 93.06, BOL_PARALELO: 119.82 / 93.06, SOL: 3.65 / 93.06 },
+            BOL_PROMEDIO: { USD: 1 / 106.23, BOL_BCV: 93.06 / 106.23, BOL_PROMEDIO: 1, BOL_PARALELO: 119.82 / 106.23, SOL: 3.65 / 106.23 },
+            BOL_PARALELO: { USD: 1 / 119.82, BOL_BCV: 93.06 / 119.82, BOL_PROMEDIO: 106.23 / 119.82, BOL_PARALELO: 1, SOL: 3.65 / 119.82 },
+            SOL: { USD: 1 / 3.65, BOL_BCV: 93.06 * (1 / 3.65), BOL_PROMEDIO: 106.23 * (1 / 3.65), BOL_PARALELO: 119.82 * (1 / 3.65), SOL: 1 },
+        };
+
+        let tasaFijaSolBolivar = 30.5;
+
+        function actualizarFechaHoraLocal() {
+            const now = new Date();
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZoneName: 'short'
+            };
+            document.getElementById('fechaHoraLocal').textContent = now.toLocaleDateString('es-VE', options);
+        }
+
+        function convertirMoneda() {
+            const cantidad = parseFloat(document.getElementById('cantidad').value);
+            const monedaOrigen = document.getElementById('monedaOrigen').value;
+            const monedaDestino = document.getElementById('monedaDestino').value;
+            const resultadoElement = document.getElementById('resultado');
+            const otrasTasasResultadoElement = document.getElementById('otrasTasasResultado');
+            const verGraficoBtn = document.getElementById('verGraficoBtn');
+
+            if (isNaN(cantidad)) {
+                resultadoElement.textContent = "Por favor, ingresa una cantidad válida.";
+                resultadoElement.style.display = 'block';
+                otrasTasasResultadoElement.style.display = 'none';
+                verGraficoBtn.style.display = 'none';
+                return;
+            }
+
+            let resultado = cantidad;
+            let otrasTasasText = "";
+
+            if (tasasCambio[monedaOrigen] && tasasCambio[monedaOrigen][monedaDestino]) {
+                resultado = cantidad * tasasCambio[monedaOrigen][monedaDestino];
+                resultadoElement.textContent = `${cantidad.toFixed(2)} ${obtenerNombreMoneda(monedaOrigen)} son ${resultado.toFixed(2)} ${obtenerNombreMoneda(monedaDestino)}`;
+                resultadoElement.style.display = 'block';
+
+                if (monedaDestino === 'BOL_BCV') {
+                    const promedio = cantidad * tasasCambio[monedaOrigen].BOL_PROMEDIO;
+                    const paralelo = cantidad * tasasCambio[monedaOrigen].BOL_PARALELO;
+                    otrasTasasText = `<p class="mb-0">También serían:</p> <p class="mb-0"><small>Promedio: ${promedio.toFixed(2)} Bs.</small></p> <p><small>Paralelo: ${paralelo.toFixed(2)} Bs.</small></p>`;
+                    otrasTasasResultadoElement.innerHTML = otrasTasasText;
+                    otrasTasasResultadoElement.style.display = 'block';
+                    verGraficoBtn.style.display = 'block';
+                } else if (monedaDestino === 'BOL_PROMEDIO') {
+                    const bcv = cantidad * tasasCambio[monedaOrigen].BOL_BCV;
+                    const paralelo = cantidad * tasasCambio[monedaOrigen].BOL_PARALELO;
+                    otrasTasasText = `<p class="mb-0">También serían:</p> <p class="mb-0"><small>BCV: ${bcv.toFixed(2)} Bs.</small></p> <p><small>Paralelo: ${paralelo.toFixed(2)} Bs.</small></p>`;
+                    otrasTasasResultadoElement.innerHTML = otrasTasasText;
+                    otrasTasasResultadoElement.style.display = 'block';
+                    verGraficoBtn.style.display = 'block';
+                } else if (monedaDestino === 'BOL_PARALELO') {
+                    const bcv = cantidad * tasasCambio[monedaOrigen].BOL_BCV;
+                    const promedio = cantidad * tasasCambio[monedaOrigen].BOL_PROMEDIO;
+                    otrasTasasText = `<p class="mb-0">También serían:</p> <p class="mb-0"><small>BCV: ${bcv.toFixed(2)} Bs.</small></p> <p><small>Promedio: ${promedio.toFixed(2)} Bs.</small></p>`;
+                    otrasTasasResultadoElement.innerHTML = otrasTasasText;
+                    otrasTasasResultadoElement.style.display = 'block';
+                    verGraficoBtn.style.display = 'block';
+                } else {
+                    otrasTasasResultadoElement.style.display = 'none';
+                    verGraficoBtn.style.display = 'none';
+                }
+
+                if ((monedaDestino.startsWith('BOL') && monedaOrigen === 'SOL') || (monedaOrigen.startsWith('BOL') && monedaDestino === 'SOL')) {
+                    const resultadoFijo = (monedaDestino.startsWith('BOL')) ? cantidad * tasaFijaSolBolivar : cantidad / tasaFijaSolBolivar;
+                    otrasTasasText += `<p class="mt-2 text-muted small">A la tasa fija de 1 SOL = ${tasaFijaSolBolivar} Bs: ${cantidad.toFixed(2)} ${obtenerNombreMoneda(monedaOrigen)} son ${resultadoFijo.toFixed(2)} ${obtenerNombreMoneda(monedaDestino)}</p>`;
+                    otrasTasasResultadoElement.innerHTML += otrasTasasText;
+                    otrasTasasResultadoElement.style.display = 'block';
+                    verGraficoBtn.style.display = 'block';
+                }
+
+            } else {
+                resultadoElement.textContent = "No se pudo realizar la conversión.";
+                resultadoElement.style.display = 'block';
+                otrasTasasResultadoElement.style.display = 'none';
+                verGraficoBtn.style.display = 'none';
+            }
+            actualizarGrafica(cantidad, monedaOrigen, monedaDestino);
+        }
+
+        function obtenerNombreMoneda(codigo) {
+            switch (codigo) {
+                case 'SOL': return 'Soles';
+                case 'BOL_BCV': return 'Bolívares (BCV)';
+                case 'BOL_PROMEDIO': return 'Bolívares (Promedio)';
+                case 'BOL_PARALELO': return 'Bolívares (Paralelo)';
+                case 'USD': return 'Dólares';
+                default: return codigo;
+            }
+        }
+
+        function guardarTasasEditadas() {
+            const nuevaTasaUSD_BOL_BCV = parseFloat(document.getElementById('editarTasaUSD_BOL_BCV').value);
+            const nuevaTasaUSD_BOL_PROMEDIO = parseFloat(document.getElementById('editarTasaUSD_BOL_PROMEDIO').value);
+            const nuevaTasaUSD_BOL_PARALELO = parseFloat(document.getElementById('editarTasaUSD_BOL_PARALELO').value);
+            const nuevaTasaUSD_SOL = parseFloat(document.getElementById('editarTasaUSD_SOL').value);
+            const nuevaTasaSOL_BOL = parseFloat(document.getElementById('editarTasaSOL_BOL').value);
+
+            if (!isNaN(nuevaTasaUSD_BOL_BCV)) {
+                tasasCambio.USD.BOL_BCV = nuevaTasaUSD_BOL_BCV;
+                tasasCambio.BOL_BCV.USD = 1 / nuevaTasaUSD_BOL_BCV;
+                document.getElementById('tasaBCVDisplay').textContent = nuevaTasaUSD_BOL_BCV.toFixed(2);
+            }
+            if (!isNaN(nuevaTasaUSD_BOL_PROMEDIO)) {
+                tasasCambio.USD.BOL_PROMEDIO = nuevaTasaUSD_BOL_PROMEDIO;
+                tasasCambio.BOL_PROMEDIO.USD = 1 / nuevaTasaUSD_BOL_PROMEDIO;
+                document.getElementById('tasaPromedioDisplay').textContent = nuevaTasaUSD_BOL_PROMEDIO.toFixed(2);
+            }
+            if (!isNaN(nuevaTasaUSD_BOL_PARALELO)) {
+                tasasCambio.USD.BOL_PARALELO = nuevaTasaUSD_BOL_PARALELO;
+                tasasCambio.BOL_PARALELO.USD = 1 / nuevaTasaUSD_BOL_PARALELO;
+                document.getElementById('tasaParaleloDisplay').textContent = nuevaTasaUSD_BOL_PARALELO.toFixed(2);
+            }
+            if (!isNaN(nuevaTasaUSD_SOL)) {
+                tasasCambio.USD.SOL = nuevaTasaUSD_SOL;
+                tasasCambio.SOL.USD = 1 / nuevaTasaUSD_SOL;
+                document.getElementById('tasaUSDSOLDisplay').textContent = nuevaTasaUSD_SOL.toFixed(2);
+            }
+            if (!isNaN(nuevaTasaSOL_BOL)) {
+                tasaFijaSolBolivar = nuevaTasaSOL_BOL;
+                tasasCambio.SOL.BOL_BCV = nuevaTasaUSD_BOL_BCV * tasasCambio.SOL.USD;
+                tasasCambio.SOL.BOL_PROMEDIO = nuevaTasaUSD_BOL_PROMEDIO * tasasCambio.SOL.USD;
+                tasasCambio.SOL.BOL_PARALELO = nuevaTasaUSD_BOL_PARALELO * tasasCambio.SOL.USD;
+                document.getElementById('tasaSOLPromedioBOLDisplay').textContent = nuevaTasaSOL_BOL.toFixed(2);
+            }
+
+            // Recalcular tasas dependientes
+            tasasCambio.BOL_BCV.BOL_PROMEDIO = tasasCambio.USD.BOL_PROMEDIO / tasasCambio.USD.BOL_BCV;
+            tasasCambio.BOL_BCV.BOL_PARALELO = tasasCambio.USD.BOL_PARALELO / tasasCambio.USD.BOL_BCV;
+            tasasCambio.BOL_BCV.SOL = tasasCambio.USD.SOL / tasasCambio.USD.BOL_BCV;
+
+            tasasCambio.BOL_PROMEDIO.BOL_BCV = tasasCambio.USD.BOL_BCV / tasasCambio.USD.BOL_PROMEDIO;
+            tasasCambio.BOL_PROMEDIO.BOL_PARALELO = tasasCambio.USD.BOL_PARALELO / tasasCambio.USD.BOL_PROMEDIO;
+            tasasCambio.BOL_PROMEDIO.SOL = tasasCambio.USD.SOL / tasasCambio.USD.BOL_PROMEDIO;
+
+            tasasCambio.BOL_PARALELO.BOL_BCV = tasasCambio.USD.BOL_BCV / tasasCambio.USD.BOL_PARALELO;
+            tasasCambio.BOL_PARALELO.BOL_PROMEDIO = tasasCambio.USD.BOL_PROMEDIO / tasasCambio.USD.BOL_PARALELO;
+            tasasCambio.BOL_PARALELO.SOL = tasasCambio.USD.SOL / tasasCambio.USD.BOL_PARALELO;
+
+            tasasCambio.SOL.BOL_BCV = tasasCambio.USD.BOL_BCV * tasasCambio.SOL.USD;
+            tasasCambio.SOL.BOL_PROMEDIO = tasasCambio.USD.BOL_PROMEDIO * tasasCambio.SOL.USD;
+            tasasCambio.SOL.BOL_PARALELO = tasasCambio.USD.BOL_PARALELO * tasasCambio.SOL.USD;
+        }
+
+        let chartInstance = null;
+
+        function mostrarGrafica() {
+            const graficaCanvas = document.getElementById('graficaResultados');
+            graficaCanvas.style.display = 'block';
+            anime({
+                targets: graficaCanvas,
+                opacity: [0, 1],
+                duration: 500,
+                easing: 'easeInOutQuad'
+            });
+        }
+
+        function actualizarGrafica(cantidadOrigen, monedaOrigen, monedaDestino) {
+            const graficaCanvas = document.getElementById('graficaResultados');
+            const ctx = graficaCanvas.getContext('2d');
+            let labels = [];
+            let data = [];
+            let colors = ['#007bff', '#28a745', '#dc3545', '#ffc107'];
+
+            if (monedaDestino.startsWith('BOL')) {
+                if (monedaOrigen !== 'BOL_BCV') { labels.push('BCV'); data.push(cantidadOrigen * tasasCambio[monedaOrigen].BOL_BCV); }
+                if (monedaOrigen !== 'BOL_PROMEDIO') { labels.push('Promedio'); data.push(cantidadOrigen * tasasCambio[monedaOrigen].BOL_PROMEDIO); }
+                if (monedaOrigen !== 'BOL_PARALELO') { labels.push('Paralelo'); data.push(cantidadOrigen * tasasCambio[monedaOrigen].BOL_PARALELO); }
+                if (monedaOrigen === 'SOL') { labels.push('Fijo (Sol)'); data.push(cantidadOrigen * tasaFijaSolBolivar); colors.push('#6c757d'); }
+            } else if (monedaDestino === 'USD') {
+                if (monedaOrigen.startsWith('BOL')) { labels.push('Dólar'); data.push(cantidadOrigen * tasasCambio[monedaOrigen].USD); }
+                if (monedaOrigen === 'SOL') { labels.push('Dólar'); data.push(cantidadOrigen * tasasCambio.SOL.USD); }
+            } else if (monedaDestino === 'SOL') {
+                if (monedaOrigen.startsWith('BOL')) { labels.push('Sol'); data.push(cantidadOrigen * tasasCambio[monedaOrigen].SOL); }
+                if (monedaOrigen === 'USD') { labels.push('Sol'); data.push(cantidadOrigen * tasasCambio.USD.SOL); }
+            }
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Equivalencia de ${obtenerNombreMoneda(monedaOrigen)}`,
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c + 'AA'),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    const currency = monedaDestino.startsWith('BOL') ? 'VEF' : (monedaDestino === 'SOL' ? 'PEN' : 'USD');
+                                    return new Intl.NumberFormat('es-VE', { style: 'currency', currency: currency }).format(value);
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        const currency = monedaDestino.startsWith('BOL') ? 'VEF' : (monedaDestino === 'SOL' ? 'PEN' : 'USD');
+                                        label += new Intl.NumberFormat('es-VE', { style: 'currency', currency: currency }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            actualizarFechaHoraLocal();
+            setInterval(actualizarFechaHoraLocal, 1000);
+
+            anime({
+                targets: '.container',
+                translateY: [-50, 0],
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeOutQuart'
+            });
+        });
+    </script>
+</body>
+</html>
